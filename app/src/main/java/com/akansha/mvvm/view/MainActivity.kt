@@ -1,4 +1,4 @@
-package com.akansha.mvvm
+package com.akansha.mvvm.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
