@@ -1,5 +1,6 @@
 package com.akansha.mvvm.model
 
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 object OrderDataGenerator {
@@ -7,17 +8,24 @@ object OrderDataGenerator {
     private val currentProducts = arrayListOf<Product>()
     private val currentOrders = arrayListOf<Order>()
 
+    private const val stdDelay = 2000L
+
     init {
-        for (i in 1..30){
+        for (i in 1..30) {
             generateUsers()
             generateProducts()
         }
-        for(i in 1..30){
+        for (i in 1..30) {
             generateOrders()
         }
     }
 
-    private fun generateUsers(){
+    suspend fun getAllOrders(): List<Order> {
+        delay(stdDelay)
+        return currentOrders
+    }
+
+    private fun generateUsers() {
         val index = Random.nextInt(SampleData.usersList.size)
         val userName = SampleData.usersList[index]
         val email = "$userName@gmail.com"
@@ -26,7 +34,7 @@ object OrderDataGenerator {
         currentUsers.add(User(userId, userName, email))
     }
 
-    private fun generateProducts(){
+    private fun generateProducts() {
         val brandIndex = Random.nextInt(SampleData.brandsList.size)
         val brandName = SampleData.brandsList[brandIndex]
         val productIndex = Random.nextInt(SampleData.productsList.size)
@@ -37,7 +45,7 @@ object OrderDataGenerator {
         currentProducts.add(Product(productId, productName, brandName, price))
     }
 
-    private fun generateOrders(){
+    private fun generateOrders() {
         val user = currentUsers[Random.nextInt(currentUsers.size)]
         val product = currentProducts[Random.nextInt(currentProducts.size)]
         val orderId = 300 + currentOrders.size

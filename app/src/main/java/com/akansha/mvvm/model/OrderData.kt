@@ -4,14 +4,16 @@ data class User(
     val id: Int,
     val name: String,
     val email: String,
-)
+) {
+    override fun toString(): String = "$name ($email)"
+}
 
 data class Product(
     val id: Int,
     val name: String,
     val brand: String,
     val price: Int
-){
+) {
     override fun toString() = "$name - $brand ($$price)"
 }
 
