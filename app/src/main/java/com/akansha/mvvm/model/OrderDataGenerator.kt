@@ -34,6 +34,16 @@ object OrderDataGenerator {
         currentUsers.add(User(userId, userName, email))
     }
 
+    suspend fun searchOrders(query: String): List<Order> {
+        delay(stdDelay)
+        return currentOrders.filter { order ->
+            order.product.name.lowercase().contains(query.lowercase()) or
+                    order.product.brand.lowercase().contains(query.lowercase()) or
+                    order.user.name.lowercase().contains(query.lowercase()) or
+                    order.user.email.lowercase().contains(query.lowercase())
+        }
+    }
+
     private fun generateProducts() {
         val brandIndex = Random.nextInt(SampleData.brandsList.size)
         val brandName = SampleData.brandsList[brandIndex]

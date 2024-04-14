@@ -1,20 +1,13 @@
 package com.akansha.mvvm.view
 
-import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Observer
 import com.akansha.mvvm.model.LoadingState
 import com.akansha.mvvm.model.Order
-import com.akansha.mvvm.ui.theme.MvvmTheme
 import com.akansha.mvvm.view.design.ErrorScreen
 import com.akansha.mvvm.view.design.MainScreen
-import com.akansha.mvvm.view.design.ProgressScreen
 import com.akansha.mvvm.viewmodel.MainViewModel
 
 class MainActivity : ComponentActivity() {
@@ -27,9 +20,9 @@ class MainActivity : ComponentActivity() {
         viewModel.onViewReady()
     }
 
-    private fun initializeUI(orders: List<Order>) {
+    private fun initializeUI(loadingState: LoadingState, orders: List<Order>) {
         setContent {
-            MainScreen(orders, onSearchTextChanged = { viewModel.onSearchQuery(it) })
+            MainScreen(loadingState, orders, onSearchTextChanged = { viewModel.onSearchQuery(it) })
         }
     }
 
@@ -38,15 +31,19 @@ class MainActivity : ComponentActivity() {
             onLoadingStateChanged(it)
         })
         viewModel.ordersLiveData.observe(this, Observer {
-            initializeUI(it)
+            initializeUI(LoadingState.LOADED, it)
         })
     }
 
     private fun onLoadingStateChanged(state: LoadingState) {
         setContent {
             when (state) {
-                LoadingState.LOADED -> viewModel.getCurrentOrders()?.let { initializeUI(it) }
-                LoadingState.LOADING -> ProgressScreen()
+                LoadingState.LOADED -> viewModel.getCurrentOrders()
+                    ?.let { initializeUI(LoadingState.LOADED, it) }
+
+                LoadingState.LOADING -> viewModel.getCurrentOrders()
+                    ?.let { initializeUI(LoadingState.LOADING, it) }
+
                 LoadingState.ERROR -> ErrorScreen()
             }
         }

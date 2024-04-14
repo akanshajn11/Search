@@ -2,9 +2,12 @@ package com.akansha.mvvm.view.design
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -16,11 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.akansha.mvvm.model.LoadingState
 import com.akansha.mvvm.model.Order
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(orders: List<Order>, onSearchTextChanged: (String) -> Unit) {
+fun MainScreen(
+    loadingState: LoadingState,
+    orders: List<Order>,
+    onSearchTextChanged: (String) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(text = "Orders") })
@@ -47,19 +55,36 @@ fun MainScreen(orders: List<Order>, onSearchTextChanged: (String) -> Unit) {
                     .fillMaxWidth(),
                 placeholder = { Text("Search order") }
             )
-            LazyColumn(
-                Modifier
-                    .constrainAs(recyclerView) {
-                        top.linkTo(text.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
+            if (loadingState == LoadingState.LOADED) {
+                LazyColumn(
+                    Modifier
+                        .constrainAs(recyclerView) {
+                            top.linkTo(text.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        }
+                ) {
+                    items(orders) {
+                        OrderItem(it)
                     }
-            ) {
-                items(orders) {
-                    OrderItem(it)
                 }
+            } else {
+                val progress = createRef()
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .width(64.dp)
+                        .constrainAs(progress) {
+                            top.linkTo(text.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        },
+                    color = MaterialTheme.colorScheme.secondary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                )
             }
         }
     }
 }
+
