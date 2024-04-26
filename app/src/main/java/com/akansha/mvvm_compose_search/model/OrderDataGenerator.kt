@@ -1,4 +1,4 @@
-package com.akansha.mvvm.model
+package com.akansha.mvvm_compose_search.model
 
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -8,7 +8,7 @@ object OrderDataGenerator {
     private val currentProducts = arrayListOf<Product>()
     private val currentOrders = arrayListOf<Order>()
 
-    private const val stdDelay = 2000L
+    private const val STD_DELAY = 2000L
 
     init {
         for (i in 1..30) {
@@ -20,11 +20,6 @@ object OrderDataGenerator {
         }
     }
 
-    suspend fun getAllOrders(): List<Order> {
-        delay(stdDelay)
-        return currentOrders
-    }
-
     private fun generateUsers() {
         val index = Random.nextInt(SampleData.usersList.size)
         val userName = SampleData.usersList[index]
@@ -32,16 +27,6 @@ object OrderDataGenerator {
         val userId = 100 + currentUsers.size
 
         currentUsers.add(User(userId, userName, email))
-    }
-
-    suspend fun searchOrders(query: String): List<Order> {
-        delay(stdDelay)
-        return currentOrders.filter { order ->
-            order.product.name.lowercase().contains(query.lowercase()) or
-                    order.product.brand.lowercase().contains(query.lowercase()) or
-                    order.user.name.lowercase().contains(query.lowercase()) or
-                    order.user.email.lowercase().contains(query.lowercase())
-        }
     }
 
     private fun generateProducts() {
@@ -61,5 +46,20 @@ object OrderDataGenerator {
         val orderId = 300 + currentOrders.size
 
         currentOrders.add(Order(orderId, user, product))
+    }
+
+    suspend fun getAllOrders(): List<Order> {
+        delay(STD_DELAY)
+        return currentOrders
+    }
+
+    suspend fun searchOrders(query: String): List<Order> {
+        delay(STD_DELAY)
+        return currentOrders.filter { order ->
+            order.product.name.lowercase().contains(query.lowercase()) or
+                    order.product.brand.lowercase().contains(query.lowercase()) or
+                    order.user.name.lowercase().contains(query.lowercase()) or
+                    order.user.email.lowercase().contains(query.lowercase())
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.akansha.mvvm.ui.theme
+package com.akansha.mvvm_compose_search.view.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun MvvmTheme(
+fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -65,6 +65,10 @@ fun MvvmTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
-        content = content
+        content = content,
     )
+}
+
+object AppTheme {
+    val spacings = Spacings
 }

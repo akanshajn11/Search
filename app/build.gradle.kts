@@ -1,15 +1,14 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-
 }
 
 android {
-    namespace = "com.akansha.mvvm"
+    namespace = "com.akansha.mvvm_compose_search"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.akansha.mvvm"
+        applicationId = "com.akansha.mvvm_compose_search"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -52,7 +51,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -1,4 +1,4 @@
-package com.akansha.mvvm
+package com.akansha.mvvm_compose_search
 
 import org.junit.Test
 

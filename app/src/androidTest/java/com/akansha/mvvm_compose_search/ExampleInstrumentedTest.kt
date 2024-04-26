@@ -1,4 +1,4 @@
-package com.akansha.mvvm
+package com.akansha.mvvm_compose_search
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

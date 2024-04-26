@@ -1,4 +1,4 @@
-package com.akansha.mvvm.model
+package com.akansha.mvvm_compose_search.model
 
 data class User(
     val id: Int,
@@ -12,7 +12,7 @@ data class Product(
     val id: Int,
     val name: String,
     val brand: String,
-    val price: Int
+    val price: Int,
 ) {
     override fun toString() = "$name - $brand ($$price)"
 }

@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">mvvm</string>
+    <string name="app_name">mvvm_compose_search</string>
+    <string name="error_title">Error loading data!</string>
+    <string name="empty_screen_title">No orders found</string>
+    <string name="empty_screen_subtitle">Try adjusting your search</string>
+    <string name="search_bar_placeholder">"Search Orders</string>
+    <string name="clear_search">Clear Search</string>
 </resources>

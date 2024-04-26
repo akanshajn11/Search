@@ -1,4 +1,4 @@
-package com.akansha.mvvm.model
+package com.akansha.mvvm_compose_search.model
 
 enum class LoadingState {
     LOADING,

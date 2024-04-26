@@ -1,4 +1,4 @@
-package com.akansha.mvvm.ui.theme
+package com.akansha.mvvm_compose_search.view.theme
 
 import androidx.compose.ui.graphics.Color
 

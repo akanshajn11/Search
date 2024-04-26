@@ -1,14 +1,17 @@
-package com.akansha.mvvm.viewmodel
+package com.akansha.mvvm_compose_search.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
-import com.akansha.mvvm.model.LoadingState
-import com.akansha.mvvm.model.Order
-import com.akansha.mvvm.model.OrderDataGenerator
+import com.akansha.mvvm_compose_search.model.LoadingState
+import com.akansha.mvvm_compose_search.model.Order
+import com.akansha.mvvm_compose_search.model.OrderDataGenerator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -25,6 +28,8 @@ class MainViewModel : ViewModel() {
 
     private var searchJob: Job? = null
     private val debouncePeriod = 500L
+    var searchQuery by mutableStateOf("")
+        private set
 
     init {
         _searchOrdersLiveData = _queryLiveData.switchMap {
@@ -37,7 +42,25 @@ class MainViewModel : ViewModel() {
         ordersLiveData.addSource(_searchOrdersLiveData) {
             ordersLiveData.value = it
         }
+    }
 
+    fun onViewReady() {
+        if (_allOrdersLiveData.value.isNullOrEmpty()) {
+            fetchAllOrders()
+        }
+    }
+
+    fun onSearchQuery(query: String) {
+        searchJob?.cancel()
+        searchQuery = query
+        searchJob = viewModelScope.launch {
+            delay(debouncePeriod)
+            if (query.isEmpty()) {
+                fetchAllOrders()
+            } else {
+                _queryLiveData.postValue(query)
+            }
+        }
     }
 
     private fun fetchOrdersByQuery(query: String): LiveData<List<Order>> {
@@ -55,26 +78,6 @@ class MainViewModel : ViewModel() {
         return liveData
     }
 
-    fun onSearchQuery(query: String) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(debouncePeriod)
-            if (query.isEmpty()) {
-                fetchAllOrders()
-            } else {
-                _queryLiveData.postValue(query)
-            }
-        }
-    }
-
-    fun getCurrentOrders(): List<Order>? = ordersLiveData.value
-
-    fun onViewReady() {
-        if (_allOrdersLiveData.value.isNullOrEmpty()) {
-            fetchAllOrders()
-        }
-    }
-
     private fun fetchAllOrders() {
         loadingStateLiveData.value = LoadingState.LOADING
         viewModelScope.launch(Dispatchers.IO) {
@@ -87,4 +90,6 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
+    fun getCurrentOrders(): List<Order>? = ordersLiveData.value
 }
